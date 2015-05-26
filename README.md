@@ -8,6 +8,8 @@ The examples in the below article are written using angular 2.0.0-alpha.25 and I
 ## Introduction to Angular 2.0
 "Angular is a development platform for building mobile and desktop web applications. Angular includes a wealth of essential features such as mobile gestures, animations, filtering, routing, data binding, security, internationalization, and beautiful UI components. It's extremely modular, lightweight, and easy to learn." - angular.io
 
+If you want to know more about Angular 2.0, visit the official http://angular.io and for learning resources refer [this](https://github.com/timjacobi/angular2-education) which is a collection of links to various learning resources by timjacobi. 
+
 ## Introduction to Directives in Angular 2.0
 There are lot of tutorials on the Internet about creating **Components** (`Components` are basically a sub class of `Directives` and in other words Components are Directives with Views) in angular 2, however there are very less tutorials or explanations about **Directives** in angular 2 and the below is my attempt to fill the void. My article below is heavily influenced by the API docs in angular.io site.
 
@@ -42,7 +44,7 @@ Now in your HTML code you can use the `red` directive like below and the `Hello 
 
 Here you may have multiple questions like why the `selector` is using `[]` and what the hell is this `el:ElementRef`? Let us go one by one. First `selector` uses CSS selector approach to match the elements in the DOM.
 
-> This is the plnkr link to the full working code for the above example --> http://plnkr.co/edit/dFShDzOAU3TdLQbKYcbc?p=preview
+> [Here](http://plnkr.co/edit/dFShDzOAU3TdLQbKYcbc?p=preview) is the plnkr link to the full working code for the above example.
 
 Angular only allows directives to trigger on CSS selectors that do not cross element boundaries.
 
@@ -91,3 +93,5 @@ Here we have a similar `selector` which selects the elements with `color` attrib
 	* directiveProperty specifies the component property where the value is written.
 	* bindingProperty specifies the DOM property where the value is read from.
 In our example above `colour` (not `color`) is the directive property which binds to and reads its value from `color` bindings property on the DOM element. Whenever the `color` attribute value changes  in the DOM, it triggers the `set colour` method on the directive and the `colour` property is set to the new value.
+
+> [Here](http://plnkr.co/edit/kNuXAQEPie1HNXQeGrZe?p=preview) is the plnkr link to the full working code for the above example.
