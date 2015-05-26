@@ -99,4 +99,3 @@ In our example above `colour` (not `color`) is the directive property which bind
 
 > [Here](http://plnkr.co/edit/kNuXAQEPie1HNXQeGrZe?p=preview) is the plnkr link to the full working code for the above example.
 
-<iframe src="http://embed.plnkr.co/zwsiDP/preview"></iframe>
