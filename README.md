@@ -2,8 +2,9 @@
 # A sneak peek in to Directives in Angular 2.0
 
 ## Disclaimer
-Angular 2.0 is still in alpha state (as of 26-May-2015) and is changing in a very fast rate with breaking changes between most of the releases. So it is not suitable for production application. 
-The examples in the below article are written using angular 2.0.0-alpha.25 and I will try to keep the below code samples up to date if possible. Also I am not an expert in Angular 2.0 and I am not a part of Angular team. I am just another guy trying to learn and trying to share my learnings. 
+* Angular 2.0 is still in alpha state (as of 26-May-2015) and is evolving at a very fast rate with breaking changes between most of the releases. So it is not suitable for production application and I would recommend Angular 1.x for such applications. 
+* Also I am not an expert in Angular 2.0 and I am not a part of Angular team. I am just another guy trying to learn and trying to share my learnings. 
+* The examples in the below article are written using angular 2.0.0-alpha.25 and I will try to keep the below code samples up to date if possible. 
 
 ## Introduction to Angular 2.0
 "Angular is a development platform for building mobile and desktop web applications. Angular includes a wealth of essential features such as mobile gestures, animations, filtering, routing, data binding, security, internationalization, and beautiful UI components. It's extremely modular, lightweight, and easy to learn." - angular.io
@@ -36,7 +37,7 @@ class RedDec {
 ```
 
 A directive consists of a single directive annotation and a controller class. `@Directive` is the annotation used to define a directive in angular 2.  When the directive's `selector` matches elements in the DOM angular instantiates directives for each matched element. In the controller class `RedDec`, we define the behavior of the directive. Here we are using the elements `style.color` property to set the color to red.
-Now in your HTML code you can use the `red` directive like below and the `Hello World` text will be displayed in red color.
+Now in your HTML code you can use the `red` directive like below and the `Hello World` text will be rendered in red color.
 
 ```html
 <h1 red> Hello World</h1>
@@ -90,8 +91,10 @@ class ColorDec {
 ```
 
 Here we have a similar `selector` which selects the elements with `color` attribute on them, additionally we have a `properties` property which defines a set of directiveProperty to bindingProperty key-value pairs:
-	* directiveProperty specifies the component property where the value is written.
-	* bindingProperty specifies the DOM property where the value is read from.
+
+* directiveProperty specifies the component property where the value is written.
+* bindingProperty specifies the DOM property where the value is read from.
+
 In our example above `colour` (not `color`) is the directive property which binds to and reads its value from `color` bindings property on the DOM element. Whenever the `color` attribute value changes  in the DOM, it triggers the `set colour` method on the directive and the `colour` property is set to the new value.
 
 > [Here](http://plnkr.co/edit/kNuXAQEPie1HNXQeGrZe?p=preview) is the plnkr link to the full working code for the above example.
