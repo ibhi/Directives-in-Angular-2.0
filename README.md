@@ -12,7 +12,7 @@
 If you want to know more about Angular 2.0, visit the official http://angular.io and for learning resources refer [this](https://github.com/timjacobi/angular2-education) which is a collection of links to various learning resources by timjacobi. 
 
 ## Introduction to Directives in Angular 2.0
-There are lot of tutorials on the Internet about creating **Components** (`Components` are basically a sub class of `Directives` and in other words Components are Directives with Views) in angular 2, however there are very less tutorials or explanations about **Directives** in angular 2 and the below is my attempt to fill the void. My article below is heavily influenced by the API docs in angular.io site.
+There are lot of tutorials on the Internet about creating **Components** (`Components` are basically a sub class of `Directives` and in other words Components are Directives with Views) in angular 2, however there are very less tutorials or explanations about **Directives** in angular 2 and the below is my attempt to fill the void. My article below is heavily influenced by the API docs in angular.io site. Also most or all of the things discussed here will also applicable for `Components`.
 
 And as this article is focused on Directives, I assume you have basic understanding of the Angular 2.0 and its glossary of terms like, Components, Annotations(Decorators), DI, Change Detection etc.
 
@@ -98,3 +98,5 @@ Here we have a similar `selector` which selects the elements with `color` attrib
 In our example above `colour` (not `color`) is the directive property which binds to and reads its value from `color` bindings property on the DOM element. Whenever the `color` attribute value changes  in the DOM, it triggers the `set colour` method on the directive and the `colour` property is set to the new value.
 
 > [Here](http://plnkr.co/edit/kNuXAQEPie1HNXQeGrZe?p=preview) is the plnkr link to the full working code for the above example.
+
+<iframe src="http://embed.plnkr.co/zwsiDP/preview"></iframe>
