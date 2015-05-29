@@ -12,7 +12,7 @@
 If you want to know more about Angular 2.0, visit the official http://angular.io and for learning resources refer [this](https://github.com/timjacobi/angular2-education) which is a collection of links to various learning resources by timjacobi. 
 
 ## Introduction to Directives in Angular 2.0
-There are lot of tutorials on the Internet about creating **Components** (`Components` are basically a sub class of `Directives` and in other words Components are Directives with Views) in angular 2, however there are very less tutorials or explanations about **Directives** in angular 2 and the below is my attempt to fill the void. My article below is heavily influenced by the API docs in angular.io site. Also most or all of the things discussed here will also applicable for `Components`.
+There are lot of tutorials on the Internet about creating **Components** (`Components` are basically a sub class of `Directives` and in other words Components are Directives with Views) in angular 2, however there are very less tutorials or explanations about **Directives** in angular 2 and the below is my attempt to fill the void. Also most or all of the things discussed here will also applicable for `Components` and also I will use `Components` in my examples frequently, because `Components` are the basic building blocks of the angular 2.0 applications. My article below is heavily influenced by the API docs in angular.io site. 
 
 And as this article is focused on Directives, I assume you have basic understanding of the Angular 2.0 and its glossary of terms like, Components, Annotations(Decorators), DI, Change Detection etc.
 
@@ -97,5 +97,96 @@ Here we have a similar `selector` which selects the elements with `color` attrib
 
 In our example above `colour` (not `color`) is the directive property which binds to and reads its value from `color` bindings property on the DOM element. Whenever the `color` attribute value changes  in the DOM, it triggers the `set colour` method on the directive and the `colour` property is set to the new value.
 
+*update*: There has been a breaking change happened after I wrote the above example. Angular core team simplified the syntax for the properties binding. Now `properties` is not an object('name' : 'value' pair) and it is converted into an array(List) of string. Refer this [commit](https://github.com/angular/angular/commit/d7df853bde30ffe97045eff649240284ae6ffdf8).  If the directive property and binding property are of same name, then no need type them twice, just type them once and angular knows both directive property and binding property are of same name, use it like this
+
+```javascript
+....
+properties: ['color', 'name']
+```
+
+if you want to bind them with different names specify it like this
+
+```javascript
+....
+properties: ['text: tooltip']
+```
+Soon I will update my example with the latest updates to the syntax.
+
 > [Here](http://plnkr.co/edit/kNuXAQEPie1HNXQeGrZe?p=preview) is the plnkr link to the full working code for the above example.
+
+#### Example 3 (events and hostListeners)
+In the previous example we have created a custom directive with a color property to which if you assign a value to the color attribute in HTML DOM, it will change its DOM element color to the assigned value(if the assigned value is a valid color). What if we want to assign a color dynamically to an DOM element. Lets have look at the below example
+
+```javascript
+@Directive({
+  selector: 'input[color]',
+  events: ['colorChange'],
+  hostListeners: {
+    'input': 'updateColor($event)'
+  }
+})
+export class ColorDec{
+  colorChange: EventEmitter;
+  constructor(){
+   this.colorChange = new EventEmitter();
+  }
+  updateColor($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    var color = $event.target.value;
+    this.colorChange.next({$event, color});
+  }
+}
+```
+
+Basically we are selecting any input element which is having color attribute present in them using the `selector: 'input[color]'` property. Next we are defining a new custom event the directive can emit with `events: ['colorChange']` property and then we are setting up a host listener with ` hostListeners: {'input': 'updateColor($event)'}` that will react to an `input` event on the element and execute the provided method `updateColor($event)` which is defined in the controller class.
+
+Lets have a closer look at how the custom event `colorChange` is emitted by the directive. First we are declaring the event `colorChange` as a type of `EventEmitter`. `EventEmitter` is nothing but an sub class of Observable. Then we are instantiating a new `EventEmitter` and assigning it to the variable `colorChange` in the constructor function. When ever input event fired by the input element, `updateColor` method is invoked and this method has a line `this.colorChange.next({$event, color});`, this is where the custom event is fired with `$event` and `color` value. Now we can bind to this event like a native DOM event and execute some methods like this. 
+
+```javascript
+@Component({
+  selector: 'color-output'
+})
+@View({
+  template: `<p>Color entered is {{color}}</p>`,
+    directives: [ColorDec]
+})
+export class ColorOutput {
+  color: string;
+  el: ElementRef;
+  constructor(el:ElementRef) {
+    this.color = '';
+    this.el=el;
+  }
+  getColor({$event, color}){
+    this.color = color;
+    this.el.domElement.style.color = this.color;
+  }
+}
+
+@Component({
+  selector: 'app'
+})
+@View({
+  template: `
+    <input color (color-change)="output.getColor($event)">
+    <color-output #output></color-output>
+    `,
+  directives: [ColorDec, ColorOutput]
+    
+})
+export class App{
+  constructor(){
+    
+  }
+  
+}
+
+This is very important and powerful, because this is one of the ways we can communicate between Directives and Component or between one Component and another Component in Angular 2. 
+
+*Important* - One important thing to note here is that, we have defined the custom event with the name `colorChange` (Notice the came case), however because HTML is case insensitive, Angular will normalize the event name to `color-change`. So in HTML we have to bind the event with `(color-change)="doSomething()". (Thanks to @choeller).
+
+*Note* - One more thing to note in the above code is that, if you want to use any custom directives or components in another component, we need to specify them in the `directives` property on the View annotation.
+
+[Here](http://plnkr.co/edit/XXLKhcPPMrs1fOVawQrC?p=preview) is the plnkr link to the full working code for the above example.
 
