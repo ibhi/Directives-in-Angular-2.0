@@ -181,10 +181,11 @@ export class App{
   }
   
 }
+```
 
 This is very important and powerful, because this is one of the ways we can communicate between Directives and Component or between one Component and another Component in Angular 2. 
 
-*Important* - One important thing to note here is that, we have defined the custom event with the name `colorChange` (Notice the came case), however because HTML is case insensitive, Angular will normalize the event name to `color-change`. So in HTML we have to bind the event with `(color-change)="doSomething()"`. (Thanks to @choeller).
+**Important** - One important thing to note here is that, we have defined the custom event with the name `colorChange` (Notice the came case), however because HTML is case insensitive, Angular will normalize the event name to `color-change`. So in HTML we have to bind the event with `(color-change)="doSomething()"`. (Thanks to @choeller).
 
 *Note* - One more thing to note in the above code is that, if you want to use any custom directives or components in another component, we need to specify them in the `directives` property on the View annotation.
 
