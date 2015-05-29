@@ -47,19 +47,22 @@ Here you may have multiple questions like why the `selector` is using `[]` and w
 
 > [Here](http://plnkr.co/edit/dFShDzOAU3TdLQbKYcbc?p=preview) is the plnkr link to the full working code for the above example.
 
-Angular only allows directives to trigger on CSS selectors that do not cross element boundaries.
+>From angular.io docs page
 
-`selector` may be declared as one of the following:
+>Angular only allows directives to trigger on CSS selectors that do not cross element boundaries.
 
-```javascript
-element-name: select by element name.
-.class: select by class name.
-[attribute]: select by attribute name.
-[attribute=value]: select by attribute name and value.
-:not(sub_selector): select only if the element does not match the sub_selector.
-selector1, selector2: select if either selector1 or selector2 matches.
-```
-Now I hope you would have got the answer to the first question. As our directive is basically an attribute, we have used `[red]` for the `selector`. We can also combine some of the above to further refine the selection matching for example we can use `input[type=text]` to select only the input elements of type text.
+>`selector` may be declared as one of the following:
+
+>```javascript
+>element-name: select by element name.
+>.class: select by class name.
+>[attribute]: select by attribute name.
+>[attribute=value]: select by attribute name and value.
+>:not(sub_selector): select only if the element does not match the sub_selector.
+>selector1, selector2: select if either selector1 or selector2 matches.
+>```
+
+Now I hope you would have got the answer to the first question. As our directive is basically an attribute, we have used `[red]` for the `selector`. We can also combine some of the above to further refine the selection matching, for example we can use `input[type=text]` to select only the input elements of type text.
 
 I will try to answer the second question at a later stage, as we have to dwell little bit deep in to dependency injection. But for now we are trying to get an reference to the DOM element by dependency injection.
 
@@ -97,7 +100,7 @@ Here we have a similar `selector` which selects the elements with `color` attrib
 
 In our example above `colour` (not `color`) is the directive property which binds to and reads its value from `color` bindings property on the DOM element. Whenever the `color` attribute value changes  in the DOM, it triggers the `set colour` method on the directive and the `colour` property is set to the new value.
 
-*update*: There has been a breaking change happened after I wrote the above example. Angular core team simplified the syntax for the properties binding. Now `properties` is not an object('name' : 'value' pair) and it is converted into an array(List) of string. Refer this [commit](https://github.com/angular/angular/commit/d7df853bde30ffe97045eff649240284ae6ffdf8).  If the directive property and binding property are of same name, then no need type them twice, just type them once and angular knows both directive property and binding property are of same name, use it like this
+**Update**: There has been a breaking change happened after I wrote the above example. Angular core team simplified the syntax for the properties binding. Now `properties` is not an object('name' : 'value' pair) and it is converted into an array(List) of string. Refer this [commit](https://github.com/angular/angular/commit/d7df853bde30ffe97045eff649240284ae6ffdf8).  If the directive property and binding property are of same name, then no need type them twice, just type them once and angular knows both directive property and binding property are of same name, use it like this
 
 ```javascript
 ....
@@ -139,9 +142,34 @@ export class ColorDec{
 }
 ```
 
-Basically we are selecting any input element which is having color attribute present in them using the `selector: 'input[color]'` property. Next we are defining a new custom event the directive can emit with `events: ['colorChange']` property and then we are setting up a host listener with ` hostListeners: {'input': 'updateColor($event)'}` that will react to an `input` event on the element and execute the provided method `updateColor($event)` which is defined in the controller class.
+Basically we are selecting any input element which is having color attribute present in them using the `selector: 'input[color]'` property. Next we are defining a new custom event, the directive can emit with `events: ['colorChange']` property and then we are setting up a host listener with ` hostListeners: {'input': 'updateColor($event)'}` that will react to an `input` event on the element and execute the provided method `updateColor($event)` which is defined in the controller class.
 
-Lets have a closer look at how the custom event `colorChange` is emitted by the directive. First we are declaring the event `colorChange` as a type of `EventEmitter`. `EventEmitter` is nothing but an sub class of Observable. Then we are instantiating a new `EventEmitter` and assigning it to the variable `colorChange` in the constructor function. When ever input event fired by the input element, `updateColor` method is invoked and this method has a line `this.colorChange.next({$event, color});`, this is where the custom event is fired with `$event` and `color` value. Now we can bind to this event like a native DOM event and execute some methods like this. 
+>From angular.io docs page
+
+>The hostListeners property defines a set of event to method key-value pairs:
+
+>event1: the DOM event that the directive listens to.
+>statement: the statement to execute when the event occurs. If the evaluation of the statement returns false, then preventDefaultis applied >on the DOM event.
+>To listen to global events, a target must be added to the event name. The target can be window, document or body.
+
+>When writing a directive event binding, you can also refer to the following local variables:
+
+>$event: Current event object which triggered the event.
+>$target: The source of the event. This will be either a DOM element or an Angular directive. (will be implemented in later release)
+
+>Syntax:
+
+>```javascript
+>@Directive({
+>  hostListeners: {
+>    'event1': 'onMethod1(arguments)',
+>    'target:event2': 'onMethod2(arguments)',
+>    ...
+>  }
+>}
+>```
+
+Lets have a closer look at how the custom event `colorChange` is emitted by the directive. First we are declaring the event `colorChange` as a type of `EventEmitter`. `EventEmitter` is nothing but an sub class of Observable. Then we are instantiating a new `EventEmitter` and assigning it to the variable `colorChange` in the constructor function. When ever an input event is fired by the input element, `updateColor` method is invoked and this method has a line `this.colorChange.next({$event, color});`, this is where the custom event is fired with `$event` and `color` value. Now we can bind to this event like a native DOM event and execute some methods like this. 
 
 ```javascript
 @Component({
@@ -187,7 +215,7 @@ This is very important and powerful, because this is one of the ways we can comm
 
 **Important** - One important thing to note here is that, we have defined the custom event with the name `colorChange` (Notice the came case), however because HTML is case insensitive, Angular will normalize the event name to `color-change`. So in HTML we have to bind the event with `(color-change)="doSomething()"`. (Thanks to @choeller).
 
-*Note* - One more thing to note in the above code is that, if you want to use any custom directives or components in another component, we need to specify them in the `directives` property on the View annotation.
+**Note** - One more thing to note in the above code is that, if you want to use any custom directives or components in another component, we need to specify them in the `directives` property on the View annotation.
 
 [Here](http://plnkr.co/edit/XXLKhcPPMrs1fOVawQrC?p=preview) is the plnkr link to the full working code for the above example.
 
