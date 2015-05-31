@@ -18,7 +18,7 @@ And as this article is focused on Directives, I assume you have basic understand
 
 ### What is a Directive?
 <!-- A directive can be an existing DOM element or an attribute or an custom angular element, whose default behavior is altered. -->
-Directives allows you to attach behavior to elements in the DOM. It is that simple!. I will try to explain the various properties of Directives using some example codes.
+Directives allows you to attach behavior to DOM elements. It is that simple!. I will try to explain the various properties of Directives using some example codes. Directives are defined using @Directive decorator in ES6, Typescript and with a controller class. The controller class defines the behavior of a directive.
 
 #### Example 1 (selector)
 
@@ -45,7 +45,6 @@ Now in your HTML code you can use the `red` directive like below and the `Hello 
 
 Here you may have multiple questions like why the `selector` is using `[]` and what the hell is this `el:ElementRef`? Let us go one by one. First `selector` uses CSS selector approach to match the elements in the DOM.
 
-> [Here](http://plnkr.co/edit/dFShDzOAU3TdLQbKYcbc?p=preview) is the plnkr link to the full working code for the above example.
 
 >From angular.io docs page
 
@@ -65,6 +64,8 @@ Here you may have multiple questions like why the `selector` is using `[]` and w
 Now I hope you would have got the answer to the first question. As our directive is basically an attribute, we have used `[red]` for the `selector`. We can also combine some of the above to further refine the selection matching, for example we can use `input[type=text]` to select only the input elements of type text.
 
 I will try to answer the second question at a later stage, as we have to dwell little bit deep in to dependency injection. But for now we are trying to get an reference to the DOM element by dependency injection.
+
+> [Here](http://plnkr.co/edit/dFShDzOAU3TdLQbKYcbc?p=preview) is the plnkr link to the full working code for the above example.
 
 Alright, now we have a basic understanding of the Angular 2.0 Directives and we go a bit further and try to expand on the above example.
 
@@ -219,3 +220,33 @@ This is very important and powerful, because this is one of the ways we can comm
 
 [Here](http://plnkr.co/edit/XXLKhcPPMrs1fOVawQrC?p=preview) is the plnkr link to the full working code for the above example.
 
+#### Example 3 (hostProperties)
+Let us deviate from our colors example and have a look at different simple example which uses `hostProperties` property of the Directive.
+Sometimes there may be a need to trim white spaces(both before and after some text) the user enters in a text box. This can be established by the following code.
+
+```javascript
+@Directive({
+  selector: 'input[trimmed]',
+  hostListeners: {'input': 'onChange($event)'},
+  hostProperties: {'value': 'value'}
+})
+
+export class TrimmedInput{
+  value: string;
+  constructor(){
+    this.value='';
+  }
+  onChange($event){
+    this.value = $event.target.value.trim();
+    console.log(this.value);
+  }
+}
+```
+
+In the above code we have created a directive with `selector: input[trimmed]`, so it will match any input element with `trimmed` attribute attached to it. We have also attached a `hostListener` to the directive, which will execute `onChange()` method every time `input` event triggered on the host element. So the important part is `hostProperties`, which contains a name: value pair. It basically binds the directive property to the DOM property. Here it is  ` 'value' : 'value' `, this means that when ever the `value` property of the Directive changes, the `value` property on the DOM element gets updated. This is exactly opposite to `properties` property in the directive.
+Here is the HTML portion of the above
+
+```html
+ <input trimmed type="text">
+ ```
+[Here](http://plnkr.co/edit/3HqEy27v7E0ut7kSF4Nt?p=preview) is the plnkr link to the full working code for the above example.
