@@ -4,7 +4,7 @@
 ## Disclaimer
 * Angular 2.0 is still in alpha state (as of 26-May-2015) and is evolving at a very fast rate with breaking changes between most of the releases. So it is not suitable for production application and I would recommend Angular 1.x for such applications. 
 * Also I am not an expert in Angular 2.0 and I am not a part of Angular team. I am just another guy trying to learn and trying to share my learnings. 
-* The examples in the below article are written using angular 2.0.0-alpha.25 and I will try to keep the below code samples up to date if possible. 
+* The examples in the below article are written using Angular 2.0.0-alpha.25 and I will try to keep the below code samples up to date if possible. 
 
 ## Introduction to Angular 2.0
 "Angular is a development platform for building mobile and desktop web applications. Angular includes a wealth of essential features such as mobile gestures, animations, filtering, routing, data binding, security, internationalization, and beautiful UI components. It's extremely modular, lightweight, and easy to learn." - angular.io
@@ -12,13 +12,13 @@
 If you want to know more about Angular 2.0, visit the official http://angular.io and for learning resources refer [this](https://github.com/timjacobi/angular2-education) which is a collection of links to various learning resources by timjacobi. 
 
 ## Introduction to Directives in Angular 2.0
-There are lot of tutorials on the Internet about creating **Components** (`Components` are basically a sub class of `Directives` and in other words Components are Directives with Views) in angular 2, however there are very less tutorials or explanations about **Directives** in angular 2 and the below is my attempt to fill the void. Also most or all of the things discussed here will also applicable for `Components` and also I will use `Components` in my examples frequently, because `Components` are the basic building blocks of the angular 2.0 applications. My article below is heavily influenced by the API docs in angular.io site. 
+There are lot of tutorials on the Internet about creating **Components** (`Components` are basically a sub class of `Directives` and in other words Components are Directives with Views) in Angular 2, however there are very less tutorials or explanations about **Directives** in Angular 2 and the below is my attempt to fill the void. Also most or all of the things discussed here will also applicable for `Components` and also I will use `Components` in my examples frequently, because `Components` are the basic building blocks of the Angular 2.0 applications. My article below is heavily influenced by the API docs in angular.io site. 
 
 And as this article is focused on Directives, I assume you have basic understanding of the Angular 2.0 and its glossary of terms like, Components, Annotations(Decorators), DI, Change Detection etc.
 
 ### What is a Directive?
 <!-- A directive can be an existing DOM element or an attribute or an custom angular element, whose default behavior is altered. -->
-Directives allows you to attach behavior to DOM elements. It is that simple!. I will try to explain the various properties of Directives using some example codes. Directives are defined using @Directive decorator in ES6, Typescript and with a controller class. The controller class defines the behavior of a directive.
+Directives allows you to attach behavior to DOM elements. It is that simple! I will try to explain the various properties of Directives using some examples. Directives are defined using @Directive decorator in ES6, Typescript and with a controller class. The controller class defines the behavior of a directive.
 
 #### Example 1 (selector)
 
@@ -36,7 +36,7 @@ class RedDec {
 }
 ```
 
-A directive consists of a single directive annotation and a controller class. `@Directive` is the annotation used to define a directive in angular 2.  When the directive's `selector` matches elements in the DOM angular instantiates directives for each matched element. In the controller class `RedDec`, we define the behavior of the directive. Here we are using the elements `style.color` property to set the color to red.
+A directive consists of a single directive annotation and a controller class. `@Directive` is the annotation used to define a directive in Angular 2.  When the directive's `selector` matches elements in the DOM, angular instantiates directives for each matched element. In the controller class `RedDec`, we define the behavior of the directive. Here we are using the elements `style.color` property to set the color to red.
 Now in your HTML code you can use the `red` directive like below and the `Hello World` text will be rendered in red color.
 
 ```html
@@ -71,7 +71,7 @@ Alright, now we have a basic understanding of the Angular 2.0 Directives and we 
 
 #### Example 2 (properties)
 
-So in the previous example if we add the `red` attribute to any DOM element, the contents of the element color is displayed in red. What if we want to add an `color` attribute to an element and change the elements color based on the value supplied to the attribute.
+So in the previous example if we add the `red` attribute to any DOM element, the content of the element color is displayed in red. What if we want to add an `color` attribute to an element and change the elements color based on the value supplied to the attribute.
 
 ```javascript
 @Directive({
@@ -101,7 +101,7 @@ Here we have a similar `selector` which selects the elements with `color` attrib
 
 In our example above `colour` (not `color`) is the directive property which binds to and reads its value from `color` bindings property on the DOM element. Whenever the `color` attribute value changes  in the DOM, it triggers the `set colour` method on the directive and the `colour` property is set to the new value.
 
-**Update**: There has been a breaking change happened after I wrote the above example. Angular core team simplified the syntax for the properties binding. Now `properties` is not an object('name' : 'value' pair) and it is converted into an array(List) of string. Refer this [commit](https://github.com/angular/angular/commit/d7df853bde30ffe97045eff649240284ae6ffdf8).  If the directive property and binding property are of same name, then no need to type them twice, just type them once and angular knows both directive property and binding property are of same name, use it like this
+**Update**: There has been a breaking change happened after I wrote the above example. Angular core team simplified the syntax for the properties binding. Now `properties` is not an object('name' : 'value' pair) and it is converted into an array(List) of string. Refer this [commit](https://github.com/angular/angular/commit/d7df853bde30ffe97045eff649240284ae6ffdf8).  If the directive property and binding property are of same name, then no need to type them twice, just type them once and angular knows both directive property and binding property are of same name, use it like this:
 
 ```javascript
 ....
@@ -114,12 +114,13 @@ if you want to bind them with different names specify it like this
 ....
 properties: ['text: tooltip']
 ```
+
 Soon I will update my example with the latest updates to the syntax.
 
 > [Here](http://plnkr.co/edit/kNuXAQEPie1HNXQeGrZe?p=preview) is the plnkr link to the full working code for the above example.
 
 #### Example 3 (events and hostListeners)
-In the previous example we have created a custom directive with a color property to which if you assign a value to the color attribute in HTML DOM, it will change its DOM element color to the assigned value(if the assigned value is a valid color). What if we want to assign a color dynamically to an DOM element. Lets have look at the below example
+In the previous example we have created a custom directive with a color property to which if you assign a value to the color attribute in HTML DOM, it will change its DOM element color to the assigned value (if the assigned value is a valid color). What if we want to assign a color dynamically to an DOM element. Lets have look at the below example:
 
 ```javascript
 @Directive({
@@ -170,7 +171,7 @@ Basically we are selecting any input element which is having color attribute pre
 >}
 >```
 
-Lets have a closer look at how the custom event `colorChange` is emitted by the directive. First we are declaring the event `colorChange` as a type of `EventEmitter`. `EventEmitter` is nothing but an sub class of Observable. Then we are instantiating a new `EventEmitter` and assigning it to the variable `colorChange` in the constructor function. When ever an input event is fired by the input element, `updateColor` method is invoked and this method has a line `this.colorChange.next({$event, color});`, this is where the custom event is fired with `$event` and `color` value. Now we can bind to this event like a native DOM event and execute some methods like this. 
+Let's have a closer look at how the custom event `colorChange` is emitted by the directive. First we are declaring the event `colorChange` as a type of `EventEmitter`. `EventEmitter` is nothing but an sub class of Observable. Then we are instantiating a new `EventEmitter` and assigning it to the variable `colorChange` in the constructor function. Whenever an input event is fired by the input element, the `updateColor` method is invoked and this method has a line `this.colorChange.next({$event, color});`, this is where the custom event is fired with `$event` and `color` value. Now we can bind to this event like a native DOM event and execute some methods like this:
 
 ```javascript
 @Component({
@@ -222,7 +223,7 @@ This is very important and powerful, because this is one of the ways we can comm
 
 #### Example 4 (hostProperties)
 Let us deviate from our colors example and have a look at different simple example which uses `hostProperties` property of the Directive.
-Sometimes there may be a need to trim white spaces(both before and after some text) the user enters in a text box. This can be established by the following code.
+Sometimes there may be a need to trim white spaces (both before and after some text) the user enters in a text box. This can be established by the following code.
 
 ```javascript
 @Directive({
@@ -243,7 +244,7 @@ export class TrimmedInput{
 }
 ```
 
-In the above code we have created a directive with `selector: input[trimmed]`, so it will match any input element with `trimmed` attribute attached to it. We have also attached a `hostListener` to the directive, which will execute `onChange()` method every time `input` event triggered on the host element. So the important part is `hostProperties`, which contains a name: value pair. It basically binds the directive property to the DOM property. Here it is  ` 'value' : 'value' `, this means that when ever the `value` property of the Directive changes, the `value` property on the DOM element gets updated. This is exactly opposite to `properties` property in the directive.
+In the above code we have created a directive with `selector: input[trimmed]`, so it will match any input element with `trimmed` attribute attached to it. We have also attached a `hostListener` to the directive, which will execute `onChange()` method every time `input` event triggered on the host element. So the important part is `hostProperties`, which contains a name: value pair. It basically binds the directive property to the DOM property. Here it is  ` 'value' : 'value' `, this means that whenever the `value` property of the Directive changes, the `value` property on the DOM element gets updated. This is exactly opposite to `properties` property in the directive.
 Here is the HTML portion of the above
 
 ```html
