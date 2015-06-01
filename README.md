@@ -43,7 +43,7 @@ Now in your HTML code you can use the `red` directive like below and the `Hello 
 <h1 red> Hello World</h1>
 ````
 
-Here you may have multiple questions like why the `selector` is using `[]` and what the hell is this `el:ElementRef`? Let us go one by one. First `selector` uses CSS selector approach to match the elements in the DOM.
+Here you may have multiple questions like why the `selector` is using `[]` and what the heck is this `el:ElementRef`? Let us go one by one. First `selector` uses CSS selector approach to match the elements in the DOM.
 
 
 >From angular.io docs page
@@ -63,7 +63,7 @@ Here you may have multiple questions like why the `selector` is using `[]` and w
 
 Now I hope you would have got the answer to the first question. As our directive is basically an attribute, we have used `[red]` for the `selector`. We can also combine some of the above to further refine the selection matching, for example we can use `input[type=text]` to select only the input elements of type text.
 
-I will try to answer the second question at a later stage, as we have to dwell little bit deep in to dependency injection. But for now we are trying to get an reference to the DOM element by dependency injection.
+I will try to answer the second question at a later stage, as we have to dwell little bit deep in to dependency injection. But for now we are trying to get an reference to the host DOM element by dependency injection.
 
 > [Here](http://plnkr.co/edit/dFShDzOAU3TdLQbKYcbc?p=preview) is the plnkr link to the full working code for the above example.
 
@@ -101,7 +101,7 @@ Here we have a similar `selector` which selects the elements with `color` attrib
 
 In our example above `colour` (not `color`) is the directive property which binds to and reads its value from `color` bindings property on the DOM element. Whenever the `color` attribute value changes  in the DOM, it triggers the `set colour` method on the directive and the `colour` property is set to the new value.
 
-**Update**: There has been a breaking change happened after I wrote the above example. Angular core team simplified the syntax for the properties binding. Now `properties` is not an object('name' : 'value' pair) and it is converted into an array(List) of string. Refer this [commit](https://github.com/angular/angular/commit/d7df853bde30ffe97045eff649240284ae6ffdf8).  If the directive property and binding property are of same name, then no need type them twice, just type them once and angular knows both directive property and binding property are of same name, use it like this
+**Update**: There has been a breaking change happened after I wrote the above example. Angular core team simplified the syntax for the properties binding. Now `properties` is not an object('name' : 'value' pair) and it is converted into an array(List) of string. Refer this [commit](https://github.com/angular/angular/commit/d7df853bde30ffe97045eff649240284ae6ffdf8).  If the directive property and binding property are of same name, then no need to type them twice, just type them once and angular knows both directive property and binding property are of same name, use it like this
 
 ```javascript
 ....
@@ -220,7 +220,7 @@ This is very important and powerful, because this is one of the ways we can comm
 
 [Here](http://plnkr.co/edit/XXLKhcPPMrs1fOVawQrC?p=preview) is the plnkr link to the full working code for the above example.
 
-#### Example 3 (hostProperties)
+#### Example 4 (hostProperties)
 Let us deviate from our colors example and have a look at different simple example which uses `hostProperties` property of the Directive.
 Sometimes there may be a need to trim white spaces(both before and after some text) the user enters in a text box. This can be established by the following code.
 
