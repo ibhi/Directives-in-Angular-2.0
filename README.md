@@ -41,7 +41,7 @@ Now in your HTML code you can use the `red` directive like below and the `Hello 
 
 ```html
 <h1 red> Hello World</h1>
-````
+```
 
 Here you may have multiple questions like why the `selector` is using `[]` and what the heck is this `el:ElementRef`? Let us go one by one. First `selector` uses CSS selector approach to match the elements in the DOM.
 
@@ -65,6 +65,7 @@ Now I hope you would have got the answer to the first question. As our directive
 
 I will try to answer the second question at a later stage, as we have to dwell little bit deep in to dependency injection. But for now we are trying to get an reference to the host DOM element by dependency injection.
 
+TODO: Update this example to alpha.26
 > [Here](http://plnkr.co/edit/dFShDzOAU3TdLQbKYcbc?p=preview) is the plnkr link to the full working code for the above example.
 
 Alright, now we have a basic understanding of the Angular 2.0 Directives and we go a bit further and try to expand on the above example.
@@ -76,9 +77,7 @@ So in the previous example if we add the `red` attribute to any DOM element, the
 ```javascript
 @Directive({
   selector: '[color]',
-  properties: {
-    'colour' : 'color'
-  }
+  properties: ['colour : color']
 })
 
 class ColorDec {
@@ -101,7 +100,15 @@ Here we have a similar `selector` which selects the elements with `color` attrib
 
 In our example above `colour` (not `color`) is the directive property which binds to and reads its value from `color` bindings property on the DOM element. Whenever the `color` attribute value changes  in the DOM, it triggers the `set colour` method on the directive and the `colour` property is set to the new value.
 
-**Update**: There has been a breaking change happened after I wrote the above example. Angular core team simplified the syntax for the properties binding. Now `properties` is not an object('name' : 'value' pair) and it is converted into an array(List) of string. Refer this [commit](https://github.com/angular/angular/commit/d7df853bde30ffe97045eff649240284ae6ffdf8).  If the directive property and binding property are of same name, then no need to type them twice, just type them once and angular knows both directive property and binding property are of same name, use it like this:
+Now we can use the above directive in HTML like,
+
+```html
+<h1 color="blue"> Hello World</h1>
+```
+
+and this will change the color of this h1 contents to the assigned color, here it is blue.
+
+Angular core team simplified the syntax for the properties binding. Now `properties` is not an object('name' : 'value' pair), it is converted into an array(List) of string. Refer this [commit](https://github.com/angular/angular/commit/d7df853bde30ffe97045eff649240284ae6ffdf8).  If the directive property and binding property are of same name, then no need to type them twice, just type them once and angular knows both directive property and binding property are of same name, use it like this:
 
 ```javascript
 ....
@@ -115,12 +122,10 @@ if you want to bind them with different names specify it like this
 properties: ['text: tooltip']
 ```
 
-Soon I will update my example with the latest updates to the syntax.
-
 > [Here](http://plnkr.co/edit/kNuXAQEPie1HNXQeGrZe?p=preview) is the plnkr link to the full working code for the above example.
 
 #### Example 3 (events and hostListeners)
-In the previous example we have created a custom directive with a color property to which if you assign a value to the color attribute in HTML DOM, it will change its DOM element color to the assigned value (if the assigned value is a valid color). What if we want to assign a color dynamically to an DOM element. Lets have look at the below example:
+In the previous example we have created a custom directive with a color property to which if you assign a value to the color attribute for a DOM element, it will change its DOM element color to the assigned value (if the assigned value is a valid color). What if we want to assign a color dynamically to an DOM element. Lets have look at the below example:
 
 ```javascript
 @Directive({
@@ -249,5 +254,16 @@ Here is the HTML portion of the above
 
 ```html
  <input trimmed type="text">
- ```
+```
 [Here](http://plnkr.co/edit/3HqEy27v7E0ut7kSF4Nt?p=preview) is the plnkr link to the full working code for the above example.
+
+#### Example 5 (lifeCycle)
+
+
+TODO:
+1. Create seperate folders for each examples with ES6, Typescript and possibly ES5 codes
+2. Explain about ElementInjector (angular.io docs page has good example)?
+3. Explain a little bit about Component and bootstrap
+3. Make this tutorial generic to both Component and Directive 
+4. Change the onChange method name in Example 4 as it may collide with onChange lifecycle method
+5. Provide a complete real world (atleast a sample Todo) app to utilize most of the things discussed here
