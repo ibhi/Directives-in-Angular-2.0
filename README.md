@@ -374,7 +374,7 @@ This is the root component and it uses an input element and the parent component
 5. Child component's `onAllChangesDone` method is invoked. This will be invoked when the bindings of all its children have been changed. Because child component does  not have any grand child this is invoked in this stage
 6. Parent component's `onAllChangesDone` method is invoked. This is invoked because all of its children's bindings have been changed
 
-Note:  I havent used `onDestroy` im my example code. This method is invoked to notify directive of the containing view destruction.
+Note:  I havent used `onDestroy` im my example code. This method is invoked to notify component of the containing view destruction.
 
 Out of these 5 methods, according to me the important ones are `onChange` method and `onAllChangesDone` method. `onChange` method also recieves an 'changes' argument which has the previousValue and currentValue for the changed property.
 
