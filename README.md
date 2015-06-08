@@ -6,10 +6,10 @@
 * Also I am not an expert in Angular 2.0 and I am not a part of Angular team. I am just another guy trying to learn and trying to share my learnings. 
 * The examples in the below article are written using Angular 2.0.0-alpha.25 and I will try to keep the below code samples up to date if possible. 
 
-## Introduction to Angular 2.0
+## Angular 2.0
 "Angular is a development platform for building mobile and desktop web applications. Angular includes a wealth of essential features such as mobile gestures, animations, filtering, routing, data binding, security, internationalization, and beautiful UI components. It's extremely modular, lightweight, and easy to learn." - angular.io
 
-If you want to know more about Angular 2.0, visit the official http://angular.io and for learning resources refer [this](https://github.com/timjacobi/angular2-education) which is a collection of links to various learning resources by timjacobi. 
+If you want to know more about Angular 2.0, visit the official http://angular.io and for learning resources refer [this](https://github.com/timjacobi/angular2-education) which is a collection of links to various learning resources by @timjacobi.
 
 ## Introduction to Directives in Angular 2.0
 There are lot of tutorials on the Internet about creating **Components** (`Components` are basically a sub class of `Directives` and in other words Components are Directives with Views) in Angular 2, however there are very less tutorials or explanations about **Directives** in Angular 2 and the below is my attempt to fill the void. Also most or all of the things discussed here will also applicable for `Components` and also I will use `Components` in my examples frequently, because `Components` are the basic building blocks of the Angular 2.0 applications. My article below is heavily influenced by the API docs in angular.io site. 
@@ -258,12 +258,132 @@ Here is the HTML portion of the above
 [Here](http://plnkr.co/edit/3HqEy27v7E0ut7kSF4Nt?p=preview) is the plnkr link to the full working code for the above example.
 
 #### Example 5 (lifeCycle)
+There are 5 lifecycle methods available for the components and directives namely onChange, onInit, OnCheck, onAllChangesDone and onDestroy. For a complete explanation about these methods have a look at the docs page [here](https://angular.io/docs/js/latest/api/annotations/onChange-const.html). What I felt missing in the docs page was a complete example showing, at what stages these methods will get called. Here is one fictious example I put together to reason about lifecycle methods.
+Let us take an example of parent and child component to better understand the order of invocation.
 
+```javascript
+// Parent Component - has parent property bound to value of the input
+@Component({
+  selector: 'parent-comp',
+  properties: ['parent'],
+  lifecycle: [onCheck, onInit, onChange, onAllChangesDone]
+})
+@View({
+  template: `
+    I am parent component
+    <content></content>
+    `
+})
+export class ParentComp{
+  // parent: string;
+  constructor(){
+    console.log('Parent');
+  }
+// Notify a directive when it has been checked the first itme.
+// This method is called right after the directive's bindings have been checked, and before any of its children's bindings have been checked.
+// It is invoked only once.
+  onInit(){
+    console.log('I am from Parent Component\'s onInit method');
+  }
+//Notify a directive when it has been checked.
+// This method is called right after the directive's bindings have been checked, and before any of its children's bindings have been checked.
+// It is invoked every time even when none of the directive's bindings has changed.
+  onCheck(){
+    console.log('I am from Parent Component\'s onCheck method');
+  }
+// Notify a directive when any of its bindings have changed.
+// This method is called right after the directive's bindings have been checked, and before any of its children's bindings have been checked.
+// It is invoked only if at least one of the directive's bindings has changed.
+  onChange(changes){
+    console.log('I am from Parent Component\'s onChange method');
+    console.log(changes);
+  }
+  onAllChangesDone(){
+    console.log('I am from Parent Component\'s onAllChangesDone method');
+  }
+}
+// Child Component
+@Component({
+  selector: 'child-comp',
+  properties: ['child'],
+  lifecycle: [onCheck, onInit, onChange, onAllChangesDone]
+})
+@View({
+  template: `I am child component`
+})
+export class ChildComp{
+  constructor(){
+    console.log('Child');
+  }
+  onInit(){
+    console.log('I am from Child Component\'s onInit method');
+  }
+  onCheck(){
+    console.log('I am from Child Component\'s onCheck method');
+  }
+  onChange(changes){
+    console.log('I am from Child Component\'s onChange method');
+    console.log(changes);
+  }
+  onAllChangesDone(){
+    console.log('I am from Child Component\'s onAllChangesDone method');
+  }
+}
+```
+
+What we have here is one parent component with a `parent` property and one child component having `child` property. The template for the parent component is having `I am parent component` text and `<content></content>` tag to pull the contents from its child. It has 4 of the `lifecycle` methods attached to it, each one logging to the console. The child component's template has `I am child component` text. It also has 4 of the `lifecycle` methods attached to it, each one logging to the console. Here is the `app` component
+
+```javascript
+@Component({
+  selector: 'app'
+})
+@View({
+  template: `
+    <input type="text" #parent placeholder="" (keyup)><br>
+    <parent-comp [parent]="parent.value"><br>
+      <child-comp child></child-comp>
+    </parent-comp>
+  `,
+  directives: [ParentComp, ChildComp]
+})
+class App {
+  constructor() {
+    console.log('app');
+  }
+}
+```
+
+This is the root component and it uses an input element and the parent component with nested child component. Here we have bound the value of the input element to the `parent` property on the parent component. If you run the app now, we can see a series of messages getting logged in to the console.
+
+```
+1. I am from Parent Component's onChange method
+2. I am from Parent Component's onInit method
+3. I am from Parent Component's onCheck method
+
+4. I am from Child Component's onChange method
+   I am from Child Component's onInit method
+   I am from Child Component's onCheck method
+5. I am from Child Component's onAllChangesDone method
+
+6. I am from Parent Component's onAllChangesDone method
+...
+```
+1. Parent component `onChange` method is invoked. It is called after the parent component have been instantiated and this is used to render the initial state
+2. Parent component `onInit` method is invoked. It is invoked only once after the bindings have been checked and before any of its childrens bindings have been checked
+3. Parent component `onCheck` method is invoked. This method is invoked every time even when none of the component's bindings has changed and before any of its childrens bindings have been checked
+4. Now its time for child component, the same sequence as of parent component is repeated
+5. Child component's `onAllChangesDone` method is invoked. This will be invoked when the bindings of all its children have been changed. Because child component does  not have any grand child this is invoked in this stage
+6. Parent component's `onAllChangesDone` method is invoked. This is invoked because all of its children's bindings have been changed
+
+The above steps are lifecycle methods invocation during instantiation, however if you want to understand the sequence of lifecycle methods invocation after  change to the property, have a look at the below plunker.
+
+[Here](http://plnkr.co/edit/sk6Xi7L6a7ob9xiRJaSJ?p=preview) is the plnkr link to the full working code for the above example.
 
 TODO:
+
 1. Create seperate folders for each examples with ES6, Typescript and possibly ES5 codes
 2. Explain about ElementInjector (angular.io docs page has good example)?
 3. Explain a little bit about Component and bootstrap
-3. Make this tutorial generic to both Component and Directive 
-4. Change the onChange method name in Example 4 as it may collide with onChange lifecycle method
-5. Provide a complete real world (atleast a sample Todo) app to utilize most of the things discussed here
+4. Make this tutorial generic to both Component and Directive 
+5. Change the onChange method name in Example 4 as it may collide with onChange lifecycle method
+6. Provide a complete real world (atleast a sample Todo) app to utilize most of the things discussed here
